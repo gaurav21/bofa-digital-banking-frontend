@@ -5,10 +5,9 @@ module.exports = {
   },
   roots: ['<rootDir>/src'],
   preset: 'jest-preset-angular',
-  setupFilesAfterEnv: ['./setup-jest.ts'],
+  setupFilesAfterSetup: ['./setup-jest.ts'],
   collectCoverage: true,
   coverageReporters: ['lcov'],
   coverageDirectory: './coverage/jest',
   collectCoverageFrom: ['**/*.ts'],
-  globalSetup: 'jest-preset-angular/global-setup',
 };

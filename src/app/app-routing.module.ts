@@ -5,7 +5,6 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./features/after-login/after-login.module').then((m) => m.AfterLoginModule),
-    // change to before if session resume is not supported in your app
   },
   {
     path: 'after-login',
@@ -16,8 +15,17 @@ const routes: Routes = [
     loadChildren: () => import('./features/before-login/before-login.module').then((m) => m.BeforeLoginModule),
   },
   {
+    path: 'accounts',
+    loadComponent: () =>
+      import('./features/accounts/accounts-dashboard.component').then((m) => m.AccountsDashboardComponent),
+  },
+  {
+    path: 'transfers',
+    loadComponent: () => import('./features/transfers/transfer-form.component').then((m) => m.TransferFormComponent),
+  },
+  {
     path: '**',
-    redirectTo: 'after-login', // or 404 module
+    redirectTo: 'after-login',
   },
 ];
 
