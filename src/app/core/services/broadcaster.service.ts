@@ -29,7 +29,7 @@ export class BroadcasterService {
   listen<T>(key: any): Observable<T> {
     return this._eventQueue.asObservable().pipe(
       filter((e) => e.key === key),
-      map((e) => <T>e.value)
+      map((e) => <T>e.value),
     );
   }
 }

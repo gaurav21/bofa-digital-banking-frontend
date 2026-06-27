@@ -6,7 +6,6 @@ import { environment } from './environments/environment';
 
 if (environment.production) {
   enableProdMode();
-  //show this warning only on prod mode
   if (window) {
     selfXSSWarning();
   }
@@ -23,7 +22,7 @@ function selfXSSWarning() {
       `\n%cThis is a browser feature intended for developers. Using this console may allow\
      attackers to impersonate you and steal your information using an attack called Self-XSS.\
      Do not enter or paste code that you do not understand.`,
-      'font-weight:bold; font: 3em Arial; color: red;'
+      'font-weight:bold; font: 3em Arial; color: red;',
     );
   });
 }

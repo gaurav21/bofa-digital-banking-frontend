@@ -23,7 +23,7 @@ export class HTTPReqResInterceptor implements HttpInterceptor {
   constructor(
     @Inject('BASE_URL') private _baseUrl: string,
     private _broadcaster: BroadcasterService,
-    private _authservice: AuthService
+    private _authservice: AuthService,
   ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -42,7 +42,7 @@ export class HTTPReqResInterceptor implements HttpInterceptor {
       catchError((err) => this.handleError(newReq, next, err)),
       finalize(() => {
         this._broadcaster.broadcast(CONSTANTS.SHOW_LOADER, false);
-      })
+      }),
     );
   }
 
@@ -91,7 +91,7 @@ export class HTTPReqResInterceptor implements HttpInterceptor {
           this._authservice.logout();
           return throwError(error);
         }),
-        finalize(() => (this.isalreadyRefreshing = false))
+        finalize(() => (this.isalreadyRefreshing = false)),
       );
     } else {
       /* if tab is kept running and this isalreadyRefreshing is still true, 
@@ -105,7 +105,7 @@ export class HTTPReqResInterceptor implements HttpInterceptor {
         take(1), // complete the stream
         switchMap((token: AuthToken) => {
           return next.handle(this.addToken(request, token));
-        })
+        }),
       );
     }
   }
