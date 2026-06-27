@@ -18,7 +18,7 @@ import { AccountSummary } from '../../shared/components/bofa-account-card/bofa-a
           <mat-label>From Account</mat-label>
           <mat-select formControlName="fromAccountId">
             <mat-option *ngFor="let acct of accounts" [value]="acct.accountId">
-              {{ acct.accountName }} ({{ acct.availableBalance | currency:'USD' }})
+              {{ acct.accountName }} ({{ acct.availableBalance | currency: 'USD' }})
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -34,18 +34,17 @@ import { AccountSummary } from '../../shared/components/bofa-account-card/bofa-a
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Amount</mat-label>
-          <input matInput type="number" formControlName="amount" min="0.01" step="0.01">
+          <input matInput type="number" formControlName="amount" min="0.01" step="0.01" />
           <span matPrefix>$&nbsp;</span>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Memo (optional)</mat-label>
-          <input matInput formControlName="memo" maxlength="140">
+          <input matInput formControlName="memo" maxlength="140" />
         </mat-form-field>
 
         <div class="transfer-actions">
-          <button mat-raised-button color="primary" type="submit"
-                  [disabled]="!transferForm.valid || isSubmitting">
+          <button mat-raised-button color="primary" type="submit" [disabled]="!transferForm.valid || isSubmitting">
             {{ isSubmitting ? 'Processing...' : 'Transfer' }}
           </button>
           <button mat-button type="button" routerLink="/accounts">Cancel</button>
@@ -58,14 +57,36 @@ import { AccountSummary } from '../../shared/components/bofa-account-card/bofa-a
       </div>
     </div>
   `,
-  styles: [`
-    .transfer-container { padding: 24px; max-width: 600px; margin: 0 auto; }
-    .transfer-title { color: #012169; }
-    .full-width { width: 100%; }
-    .transfer-actions { display: flex; gap: 12px; margin-top: 16px; }
-    .transfer-success { display: flex; align-items: center; gap: 8px; color: #008540;
-                        padding: 16px; background: #E8F5E9; border-radius: 4px; margin-top: 16px; }
-  `]
+  styles: [
+    `
+      .transfer-container {
+        padding: 24px;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .transfer-title {
+        color: #012169;
+      }
+      .full-width {
+        width: 100%;
+      }
+      .transfer-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 16px;
+      }
+      .transfer-success {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #008540;
+        padding: 16px;
+        background: #e8f5e9;
+        border-radius: 4px;
+        margin-top: 16px;
+      }
+    `,
+  ],
 })
 export class TransferFormComponent implements OnInit, OnDestroy {
   transferForm!: FormGroup;
@@ -80,7 +101,7 @@ export class TransferFormComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private transfersService: TransfersService,
     private accountsService: AccountsService,
-    private analytics: BofAAnalyticsService
+    private analytics: BofAAnalyticsService,
   ) {}
 
   ngOnInit(): void {
@@ -90,14 +111,15 @@ export class TransferFormComponent implements OnInit, OnDestroy {
       fromAccountId: ['', Validators.required],
       toAccountId: ['', Validators.required],
       amount: [null, [Validators.required, Validators.min(0.01)]],
-      memo: ['']
+      memo: [''],
     });
 
-    this.accountsService.getAccountOverview().pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(overview => {
-      this.accounts = overview.accounts;
-    });
+    this.accountsService
+      .getAccountOverview()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((overview) => {
+        this.accounts = overview.accounts;
+      });
   }
 
   onSubmit(): void {
@@ -107,18 +129,21 @@ export class TransferFormComponent implements OnInit, OnDestroy {
     const request: TransferRequest = this.transferForm.value;
     this.analytics.trackFunnelStep('fund_transfer', 2, 'form_submitted');
 
-    this.transfersService.submitTransfer(request).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe({
-      next: (result) => {
-        this.transferSuccess = true;
-        this.confirmationNumber = result.confirmationNumber;
-        this.isSubmitting = false;
-        this.analytics.trackTransaction('internal_transfer', request.amount);
-        this.accountsService.invalidateCache();
-      },
-      error: () => { this.isSubmitting = false; }
-    });
+    this.transfersService
+      .submitTransfer(request)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (result) => {
+          this.transferSuccess = true;
+          this.confirmationNumber = result.confirmationNumber;
+          this.isSubmitting = false;
+          this.analytics.trackTransaction('internal_transfer', request.amount);
+          this.accountsService.invalidateCache();
+        },
+        error: () => {
+          this.isSubmitting = false;
+        },
+      });
   }
 
   ngOnDestroy(): void {
