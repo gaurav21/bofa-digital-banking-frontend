@@ -1,21 +1,12 @@
-// Custom Theming for Angular Material https://material.angular.io/guide/theming
-@import '../variables';
-@import '~@angular/material/theming';
+@use '@angular/material' as mat;
+@use '../variables' as vars;
+@use './mat_theme' as theme;
 
-// Be sure that you only ever include this mixin once!
-@include mat-core();
+$custom-primary: mat.m2-define-palette(theme.$mat-custom-primary);
+$custom-accent: mat.m2-define-palette(theme.$mat-custom-secondary);
+$custom-warn: mat.m2-define-palette(theme.$mat-custom-warn);
 
-@import './mat_theme';
-
-// set theme vars
-$custom-primary: mat-palette($mat-custom-primary);
-$custom-accent: mat-palette($mat-custom-secondary);
-
-// The warn palette is optional (defaults to red).
-$custom-warn: mat-palette($mat-custom-warn);
-
-// Create the light theme object NOTE: use mat-dark-theme if you use dark mode for your app
-$custom-theme: mat-light-theme(
+$custom-theme: mat.m2-define-light-theme(
   (
     color: (
       primary: $custom-primary,
@@ -25,10 +16,9 @@ $custom-theme: mat-light-theme(
   )
 );
 
-$custom-typography: mat-typography-config(
-  $font-family: $primary-font,
+$custom-typography: mat.m2-define-typography-config(
+  $font-family: vars.$primary-font,
 );
-@include angular-material-typography($custom-typography);
 
-// apply material theme
-@include angular-material-theme($custom-theme);
+@include mat.all-component-typographies($custom-typography);
+@include mat.all-component-themes($custom-theme);

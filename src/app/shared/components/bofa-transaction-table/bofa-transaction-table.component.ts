@@ -1,6 +1,6 @@
-import { Component, Input, ViewChild, OnInit } from '@angular/core';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { Component, Input, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
 export interface Transaction {
@@ -20,13 +20,13 @@ export interface Transaction {
     <div class="bofa-txn-table-container">
       <mat-form-field appearance="outline" class="bofa-filter-field">
         <mat-label>Filter transactions</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Search...">
+        <input matInput (keyup)="applyFilter($event)" placeholder="Search..." />
       </mat-form-field>
 
       <table mat-table [dataSource]="dataSource" matSort class="bofa-txn-table">
         <ng-container matColumnDef="date">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
-          <td mat-cell *matCellDef="let txn">{{ txn.date | date:'MM/dd/yyyy' }}</td>
+          <td mat-cell *matCellDef="let txn">{{ txn.date | date: 'MM/dd/yyyy' }}</td>
         </ng-container>
 
         <ng-container matColumnDef="description">
@@ -43,10 +43,13 @@ export interface Transaction {
 
         <ng-container matColumnDef="amount">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
-          <td mat-cell *matCellDef="let txn"
-              [class.amount-debit]="txn.type === 'debit'"
-              [class.amount-credit]="txn.type === 'credit'">
-            {{ txn.type === 'debit' ? '-' : '+' }}{{ txn.amount | currency:'USD' }}
+          <td
+            mat-cell
+            *matCellDef="let txn"
+            [class.amount-debit]="txn.type === 'debit'"
+            [class.amount-credit]="txn.type === 'credit'"
+          >
+            {{ txn.type === 'debit' ? '-' : '+' }}{{ txn.amount | currency: 'USD' }}
           </td>
         </ng-container>
 
@@ -58,24 +61,46 @@ export interface Transaction {
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
 
       <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
     </div>
   `,
-  styles: [`
-    .bofa-txn-table-container { width: 100%; }
-    .bofa-filter-field { width: 100%; margin-bottom: 8px; }
-    .bofa-txn-table { width: 100%; }
-    .amount-debit { color: #DC1431; }
-    .amount-credit { color: #008540; }
-    .txn-status--pending { color: #B5850B; }
-    .txn-status--declined { color: #DC1431; }
-    .txn-category-chip { background: #E8EDF3; padding: 2px 8px; border-radius: 12px; font-size: 0.85em; }
-  `]
+  styles: [
+    `
+      .bofa-txn-table-container {
+        width: 100%;
+      }
+      .bofa-filter-field {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+      .bofa-txn-table {
+        width: 100%;
+      }
+      .amount-debit {
+        color: #dc1431;
+      }
+      .amount-credit {
+        color: #008540;
+      }
+      .txn-status--pending {
+        color: #b5850b;
+      }
+      .txn-status--declined {
+        color: #dc1431;
+      }
+      .txn-category-chip {
+        background: #e8edf3;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.85em;
+      }
+    `,
+  ],
 })
-export class BofaTransactionTableComponent implements OnInit {
+export class BofaTransactionTableComponent implements OnInit, AfterViewInit {
   @Input() transactions: Transaction[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
