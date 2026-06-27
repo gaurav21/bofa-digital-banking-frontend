@@ -1,4 +1,4 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router, NavigationEnd } from '@angular/router';
@@ -30,7 +30,7 @@ export interface AnalyticsEvent {
 @Injectable({
   providedIn: 'root'
 })
-export class BofAAnalyticsService {
+export class BofAAnalyticsService implements OnDestroy {
 
   private readonly ANALYTICS_ENDPOINT = environment.analyticsEndpoint;
   private readonly BATCH_INTERVAL_MS = 5000;
