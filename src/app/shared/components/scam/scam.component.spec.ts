@@ -4,7 +4,6 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { SharedModule } from '../../shared.module';
 import { ScamComponent } from './scam.component';
 
 describe('ScamComponent', () => {
@@ -13,8 +12,7 @@ describe('ScamComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ScamComponent, SharedModule, MatDatepickerModule, MatNativeDateModule, BrowserAnimationsModule],
+      imports: [ScamComponent, MatDatepickerModule, MatNativeDateModule, BrowserAnimationsModule],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
   }));
