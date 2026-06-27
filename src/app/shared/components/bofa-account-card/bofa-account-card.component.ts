@@ -15,7 +15,7 @@ export interface AccountSummary {
 }
 
 @Component({
-  selector: 'bofa-account-card',
+  selector: 'app-bofa-account-card',
   standalone: true,
   imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule],
   template: `
@@ -38,8 +38,8 @@ export interface AccountSummary {
         </div>
       </mat-card-content>
       <mat-card-actions align="end">
-        <button mat-button color="primary" (click)="onViewDetails.emit(account)">VIEW DETAILS</button>
-        <button mat-button (click)="onTransfer.emit(account)">TRANSFER</button>
+        <button mat-button color="primary" (click)="viewDetails.emit(account)">VIEW DETAILS</button>
+        <button mat-button (click)="transfer.emit(account)">TRANSFER</button>
       </mat-card-actions>
     </mat-card>
   `,
@@ -72,8 +72,8 @@ export interface AccountSummary {
 export class BofaAccountCardComponent {
   @Input() account!: AccountSummary;
   @Input() selected = false;
-  @Output() onViewDetails = new EventEmitter<AccountSummary>();
-  @Output() onTransfer = new EventEmitter<AccountSummary>();
+  @Output() viewDetails = new EventEmitter<AccountSummary>();
+  @Output() transfer = new EventEmitter<AccountSummary>();
 
   getAccountIcon(): string {
     const icons: Record<string, string> = {

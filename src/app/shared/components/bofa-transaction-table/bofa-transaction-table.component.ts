@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, OnInit } from '@angular/core';
+import { Component, Input, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
@@ -18,7 +18,7 @@ export interface Transaction {
 }
 
 @Component({
-  selector: 'bofa-transaction-table',
+  selector: 'app-bofa-transaction-table',
   standalone: true,
   imports: [CommonModule, MatTableModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
   template: `
@@ -105,7 +105,7 @@ export interface Transaction {
     `,
   ],
 })
-export class BofaTransactionTableComponent implements OnInit {
+export class BofaTransactionTableComponent implements OnInit, AfterViewInit {
   @Input() transactions: Transaction[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;

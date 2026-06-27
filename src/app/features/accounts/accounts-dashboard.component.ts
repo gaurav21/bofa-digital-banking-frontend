@@ -9,7 +9,7 @@ import { BofaAccountCardComponent } from '../../shared/components/bofa-account-c
 import { BofaTransactionTableComponent } from '../../shared/components/bofa-transaction-table/bofa-transaction-table.component';
 
 @Component({
-  selector: 'bofa-accounts-dashboard',
+  selector: 'app-accounts-dashboard',
   standalone: true,
   imports: [CommonModule, MatProgressSpinnerModule, BofaAccountCardComponent, BofaTransactionTableComponent],
   template: `
@@ -23,19 +23,19 @@ import { BofaTransactionTableComponent } from '../../shared/components/bofa-tran
           <span class="total-amount">{{ overview.totalBalance | currency: 'USD' }}</span>
         </div>
 
-        <bofa-account-card
+        <app-bofa-account-card
           *ngFor="let account of overview.accounts"
           [account]="account"
           [selected]="selectedAccountId === account.accountId"
-          (onViewDetails)="viewAccountDetails($event)"
-          (onTransfer)="initiateTransfer($event)"
+          (viewDetails)="viewAccountDetails($event)"
+          (transfer)="initiateTransfer($event)"
         >
-        </bofa-account-card>
+        </app-bofa-account-card>
       </div>
 
       <div class="recent-activity" *ngIf="overview">
         <h2>Recent Activity</h2>
-        <bofa-transaction-table [transactions]="overview.recentTransactions"> </bofa-transaction-table>
+        <app-bofa-transaction-table [transactions]="overview.recentTransactions"> </app-bofa-transaction-table>
       </div>
 
       <mat-spinner *ngIf="isLoading" diameter="48"></mat-spinner>

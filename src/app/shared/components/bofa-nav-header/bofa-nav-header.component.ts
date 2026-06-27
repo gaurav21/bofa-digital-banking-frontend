@@ -12,7 +12,7 @@ import { SsoAuthService, BofAUserSession } from '../../../core/auth/sso.service'
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'bofa-nav-header',
+  selector: 'app-bofa-nav-header',
   standalone: true,
   imports: [
     CommonModule,
@@ -27,7 +27,7 @@ import { Observable } from 'rxjs';
   ],
   template: `
     <mat-toolbar color="primary" class="bofa-nav-header">
-      <button mat-icon-button (click)="onMenuToggle.emit()">
+      <button mat-icon-button (click)="menuToggle.emit()">
         <mat-icon>menu</mat-icon>
       </button>
 
@@ -65,7 +65,7 @@ import { Observable } from 'rxjs';
         <button mat-menu-item routerLink="/profile">Profile & Settings</button>
         <button mat-menu-item routerLink="/security">Security Center</button>
         <mat-divider></mat-divider>
-        <button mat-menu-item (click)="onLogout.emit()">Sign Out</button>
+        <button mat-menu-item (click)="logout.emit()">Sign Out</button>
       </mat-menu>
     </mat-toolbar>
   `,
@@ -88,8 +88,8 @@ import { Observable } from 'rxjs';
 })
 export class BofaNavHeaderComponent {
   @Input() notificationCount = 0;
-  @Output() onMenuToggle = new EventEmitter<void>();
-  @Output() onLogout = new EventEmitter<void>();
+  @Output() menuToggle = new EventEmitter<void>();
+  @Output() logout = new EventEmitter<void>();
 
   isAuthenticated$: Observable<boolean>;
 

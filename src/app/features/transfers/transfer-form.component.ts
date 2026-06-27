@@ -15,7 +15,7 @@ import { BofAAnalyticsService } from '../../core/analytics/bofa-analytics.sdk';
 import { AccountSummary } from '../../shared/components/bofa-account-card/bofa-account-card.component';
 
 @Component({
-  selector: 'bofa-transfer-form',
+  selector: 'app-transfer-form',
   standalone: true,
   imports: [
     CommonModule,
