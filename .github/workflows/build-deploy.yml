@@ -1,49 +1,41 @@
-name: Lint-Prettier-Prettier:verify-Tests-CypressTests-Build-Purgecss-Deploy
+name: Build and Deploy
 
 on:
   pull_request:
   push:
     branches:
       - main
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - uses: actions/setup-node@v1 #this installs node and npm for us
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
-          node-version: '14.x'
-      - uses: actions/cache@v1
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          node-version: '20.x'
+          cache: 'npm'
+
       - name: Install npm dependencies
-        run: |
-          npm install
-      - name: Prettier
-        run: |
-          npm run prettier
+        run: npm ci
+
       - name: Prettier Verify
-        run: |
-          npm run prettier:verify
+        run: npm run prettier:verify
+
       - name: Lint
-        run: |
-          npm run lint
-      # - name: Cypress Test // bug-doesn't return back to cli,
-      #   run: |
-      #     npm run e2e:ci
+        run: npm run lint
+
       - name: Test
-        run: |
-          npm run test
+        run: npx ng test --no-watch
+
       - name: Build
-        run: |
-          npm run final-build
+        run: npm run build
+
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+        if: github.ref == 'refs/heads/main'
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: dist
+          branch: gh-pages
+          folder: dist

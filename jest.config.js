@@ -11,6 +11,5 @@ module.exports = {
   coverageReporters: ['lcov'],
   coverageDirectory: './coverage/jest',
   collectCoverageFrom: ['**/*.ts'],
-  globalSetup: 'jest-preset-angular/global-setup',
   transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
 };
