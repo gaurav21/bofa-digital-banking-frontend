@@ -5,6 +5,13 @@
 export const environment = {
   production: false,
   baseurl: 'https://yourapiendpointhere.app',
+  ssoGatewayUrl: 'https://sso-dev.bofa.internal',
+  oauthClientId: 'digital-banking-web-dev',
+  ssoCallbackUrl: 'https://digital-banking-dev.bofa.internal/auth/callback',
+  coreBankingApiUrl: 'https://api-dev.bofa.internal/core-banking',
+  analyticsEndpoint: 'https://analytics-dev.bofa.internal',
+  analyticsClientId: 'digital-banking-web-dev',
+  marketDataApiUrl: 'https://market-data-dev.bofa.internal',
 };
 
 /*
