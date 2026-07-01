@@ -6,20 +6,43 @@ import { CONSTANTS } from './constants';
 
 let service: AuthService;
 let httpMock: HttpTestingController;
-let originalLocation: Location;
+let reloadSpy: jest.Mock;
+
+// jsdom guards navigation differently across versions: some allow swapping
+// window.location wholesale, others only allow redefining location.reload.
+// Try both and verify the spy actually took effect so window.location.reload()
+// never triggers real navigation regardless of the installed jsdom version.
+function stubReload(): jest.Mock {
+  const spy = jest.fn();
+  try {
+    Object.defineProperty(window, 'location', {
+      configurable: true,
+      value: { ...window.location, reload: spy, assign: jest.fn(), replace: jest.fn() } as unknown as Location,
+    });
+  } catch {
+    /* location not replaceable in this jsdom */
+  }
+  if (window.location.reload !== spy) {
+    try {
+      Object.defineProperty(window.location, 'reload', { configurable: true, value: spy });
+    } catch {
+      /* reload not redefinable in this jsdom */
+    }
+  }
+  return spy;
+}
 
 beforeEach(() => {
   TestBed.configureTestingModule({ providers: [AuthService], imports: [HttpClientTestingModule] });
   localStorage.clear();
   service = TestBed.inject(AuthService);
   httpMock = TestBed.inject(HttpTestingController);
-  originalLocation = window.location;
+  reloadSpy = stubReload();
 });
 
 afterEach(() => {
   httpMock.verify();
   localStorage.clear();
-  Object.defineProperty(window, 'location', { configurable: true, value: originalLocation });
 });
 
 it('should create', () => {
@@ -67,11 +90,6 @@ it('refreshToken posts refresh_token', () => {
 it('logout clears storage and reloads on success', () => {
   localStorage.setItem('token', 'access-1');
   localStorage.setItem(CONSTANTS.REFRESH_TOKEN, 'refresh-1');
-  const reloadSpy = jest.fn();
-  Object.defineProperty(window, 'location', {
-    configurable: true,
-    value: { ...originalLocation, reload: reloadSpy } as Location,
-  });
 
   service.logout();
 
@@ -81,17 +99,11 @@ it('logout clears storage and reloads on success', () => {
   expect(localStorage.getItem('token')).toBeNull();
   expect(localStorage.getItem(CONSTANTS.REFRESH_TOKEN)).toBeNull();
   expect(reloadSpy).toHaveBeenCalled();
-  reloadSpy.mockRestore();
 });
 
 it('logout clears storage and reloads on error', () => {
   localStorage.setItem('token', 'access-1');
   localStorage.setItem(CONSTANTS.REFRESH_TOKEN, 'refresh-1');
-  const reloadSpy = jest.fn();
-  Object.defineProperty(window, 'location', {
-    configurable: true,
-    value: { ...originalLocation, reload: reloadSpy } as Location,
-  });
 
   service.logout();
 
@@ -101,5 +113,4 @@ it('logout clears storage and reloads on error', () => {
   expect(localStorage.getItem('token')).toBeNull();
   expect(localStorage.getItem(CONSTANTS.REFRESH_TOKEN)).toBeNull();
   expect(reloadSpy).toHaveBeenCalled();
-  reloadSpy.mockRestore();
 });
