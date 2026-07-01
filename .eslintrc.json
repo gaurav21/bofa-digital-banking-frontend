@@ -18,7 +18,7 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "app",
+            "prefix": ["app", "bofa"],
             "style": "camelCase"
           }
         ],
@@ -26,10 +26,11 @@
           "error",
           {
             "type": "element",
-            "prefix": "app",
+            "prefix": ["app", "bofa"],
             "style": "kebab-case"
           }
-        ]
+        ],
+        "@angular-eslint/no-output-on-prefix": "off"
       }
     },
     {

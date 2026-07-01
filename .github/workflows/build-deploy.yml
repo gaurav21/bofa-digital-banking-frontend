@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - uses: actions/setup-node@v1 #this installs node and npm for us
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4 #this installs node and npm for us
         with:
-          node-version: '14.x'
-      - uses: actions/cache@v1
+          node-version: '16.x'
+      - uses: actions/cache@v4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -42,6 +42,7 @@ jobs:
         run: |
           npm run final-build
       - name: Deploy
+        if: github.event_name == 'push'
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
