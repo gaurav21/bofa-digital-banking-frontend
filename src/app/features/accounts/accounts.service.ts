@@ -27,7 +27,6 @@ export class AccountsService {
       this.overview$ = this.http
         .get<AccountOverview>(`${this.API_BASE}/v2/accounts/overview`, { headers: this._authHeaders() })
         .pipe(
-          shareReplay({ bufferSize: 1, refCount: true }),
           catchError(() =>
             of({
               totalBalance: 0,
@@ -35,6 +34,7 @@ export class AccountsService {
               recentTransactions: [],
             }),
           ),
+          shareReplay({ bufferSize: 1, refCount: false }),
         );
     }
     return this.overview$;
