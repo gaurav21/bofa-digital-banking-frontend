@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
   selector: 'app-scam',
   templateUrl: './scam.component.html',
   styleUrls: ['./scam.component.scss'],
-  imports: [MatDatepickerModule, MatFormFieldModule, MatNativeDateModule, MatInputModule],
+  imports: [MatDatepickerModule, MatFormFieldModule, MatNativeDateModule, MatInputModule, ReactiveFormsModule],
   standalone: true,
 })
 export class ScamComponent {

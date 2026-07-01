@@ -1,14 +1,18 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { AuthGuard } from './auth.guard';
-
-let guard: AuthGuard;
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { authGuard } from './auth.guard';
 
 beforeEach(() => {
-  TestBed.configureTestingModule({ providers: [AuthGuard], imports: [HttpClientTestingModule] });
+  TestBed.configureTestingModule({
+    providers: [provideHttpClient(), provideHttpClientTesting()],
+  });
 });
 
-it('should create', () => {
-  guard = TestBed.inject(AuthGuard);
-  expect(guard).toBeTruthy();
+it('should be created', () => {
+  const result = TestBed.runInInjectionContext(() =>
+    authGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot),
+  );
+  expect(result).toBeDefined();
 });
