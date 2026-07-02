@@ -20,22 +20,10 @@ export interface PortfolioValuation {
   holdings: { symbol: string; shares: number; value: number }[];
 }
 
-/**
- * Third-party financial market data provider
- *
- * Integrates with Refinitiv/Bloomberg-style data feed for
- * real-time market quotes and portfolio valuations.
- *
- * Angular 14 patterns:
- *   - timer() + switchMap() polling (should use signals/effects in Angular 18)
- *   - retry() without config object (deprecated signature)
- *   - shareReplay(1) without refCount
- */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MarketDataProvider {
-
   private readonly MARKET_API = environment.marketDataApiUrl;
   private readonly POLL_INTERVAL_MS = 30000;
 
@@ -44,34 +32,25 @@ export class MarketDataProvider {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Start polling market indices (DOW, S&P 500, NASDAQ)
-   * Uses timer + switchMap — deprecated polling pattern
-   */
   startMarketFeed(): Observable<MarketQuote[]> {
     return timer(0, this.POLL_INTERVAL_MS).pipe(
-      switchMap(() => this.http.get<MarketQuote[]>(
-        `${this.MARKET_API}/v1/indices`,
-        { params: { symbols: 'DJI,SPX,IXIC' } }
-      )),
-      retry(3),  // Deprecated: retry(count) — Angular 18 uses retry({ count, delay })
-      tap(quotes => this._indices$.next(quotes)),
+      switchMap(() =>
+        this.http.get<MarketQuote[]>(`${this.MARKET_API}/v1/indices`, { params: { symbols: 'DJI,SPX,IXIC' } }),
+      ),
+      retry({ count: 3 }),
+      tap((quotes) => this._indices$.next(quotes)),
       catchError(() => EMPTY),
-      shareReplay(1)
+      shareReplay({ bufferSize: 1, refCount: false }),
     );
   }
 
   getQuote(symbol: string): Observable<MarketQuote> {
-    return this.http.get<MarketQuote>(
-      `${this.MARKET_API}/v1/quotes/${symbol}`
-    );
+    return this.http.get<MarketQuote>(`${this.MARKET_API}/v1/quotes/${symbol}`);
   }
 
   getPortfolioValuation(accountId: string): Observable<PortfolioValuation> {
-    return this.http.get<PortfolioValuation>(
-      `${this.MARKET_API}/v1/portfolios/${accountId}/valuation`
-    ).pipe(
-      shareReplay(1)
-    );
+    return this.http
+      .get<PortfolioValuation>(`${this.MARKET_API}/v1/portfolios/${accountId}/valuation`)
+      .pipe(shareReplay({ bufferSize: 1, refCount: false }));
   }
 }

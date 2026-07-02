@@ -24,39 +24,57 @@ export interface AccountSummary {
       <mat-card-content>
         <div class="balance-display">
           <span class="balance-label">Available Balance</span>
-          <span class="balance-amount">{{ account.availableBalance | currency:account.currency }}</span>
+          <span class="balance-amount">{{ account.availableBalance | currency: account.currency }}</span>
         </div>
         <div class="balance-display balance-display--secondary">
           <span class="balance-label">Current Balance</span>
-          <span class="balance-amount">{{ account.balance | currency:account.currency }}</span>
+          <span class="balance-amount">{{ account.balance | currency: account.currency }}</span>
         </div>
       </mat-card-content>
       <mat-card-actions align="end">
-        <button mat-button color="primary" (click)="onViewDetails.emit(account)">VIEW DETAILS</button>
-        <button mat-button (click)="onTransfer.emit(account)">TRANSFER</button>
+        <button mat-button color="primary" (click)="viewDetails.emit(account)">VIEW DETAILS</button>
+        <button mat-button (click)="transfer.emit(account)">TRANSFER</button>
       </mat-card-actions>
     </mat-card>
   `,
-  styles: [`
-    .bofa-account-card { margin-bottom: 16px; border-left: 4px solid #012169; }
-    .bofa-account-card--selected { border-left-color: #DC1431; }
-    .balance-display { display: flex; justify-content: space-between; margin: 8px 0; }
-    .balance-amount { font-size: 1.25rem; font-weight: 600; color: #012169; }
-    .balance-display--secondary .balance-amount { font-size: 1rem; color: #666; }
-  `]
+  styles: [
+    `
+      .bofa-account-card {
+        margin-bottom: 16px;
+        border-left: 4px solid #012169;
+      }
+      .bofa-account-card--selected {
+        border-left-color: #dc1431;
+      }
+      .balance-display {
+        display: flex;
+        justify-content: space-between;
+        margin: 8px 0;
+      }
+      .balance-amount {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #012169;
+      }
+      .balance-display--secondary .balance-amount {
+        font-size: 1rem;
+        color: #666;
+      }
+    `,
+  ],
 })
 export class BofaAccountCardComponent {
   @Input() account!: AccountSummary;
   @Input() selected = false;
-  @Output() onViewDetails = new EventEmitter<AccountSummary>();
-  @Output() onTransfer = new EventEmitter<AccountSummary>();
+  @Output() viewDetails = new EventEmitter<AccountSummary>();
+  @Output() transfer = new EventEmitter<AccountSummary>();
 
   getAccountIcon(): string {
     const icons: Record<string, string> = {
       checking: 'account_balance',
       savings: 'savings',
       credit: 'credit_card',
-      investment: 'trending_up'
+      investment: 'trending_up',
     };
     return icons[this.account.accountType] || 'account_balance';
   }

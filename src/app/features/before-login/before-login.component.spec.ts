@@ -8,15 +8,13 @@ describe('BeforeLoginComponent', () => {
   let component: BeforeLoginComponent;
   let fixture: ComponentFixture<BeforeLoginComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [BeforeLoginComponent],
-        imports: [SharedModule],
-        schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [BeforeLoginComponent],
+      imports: [SharedModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BeforeLoginComponent);
