@@ -40,7 +40,7 @@ export class MarketDataProvider {
       retry({ count: 3 }),
       tap((quotes) => this._indices$.next(quotes)),
       catchError(() => EMPTY),
-      shareReplay({ bufferSize: 1, refCount: true }),
+      shareReplay({ bufferSize: 1, refCount: false }),
     );
   }
 
@@ -51,6 +51,6 @@ export class MarketDataProvider {
   getPortfolioValuation(accountId: string): Observable<PortfolioValuation> {
     return this.http
       .get<PortfolioValuation>(`${this.MARKET_API}/v1/portfolios/${accountId}/valuation`)
-      .pipe(shareReplay({ bufferSize: 1, refCount: true }));
+      .pipe(shareReplay({ bufferSize: 1, refCount: false }));
   }
 }

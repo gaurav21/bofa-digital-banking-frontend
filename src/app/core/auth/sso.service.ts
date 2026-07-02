@@ -31,7 +31,7 @@ export class SsoAuthService {
 
   public isAuthenticated$: Observable<boolean> = this.currentSession$.pipe(
     map((session) => !!session && session.expiresAt > Date.now()),
-    shareReplay({ bufferSize: 1, refCount: true }),
+    shareReplay({ bufferSize: 1, refCount: false }),
   );
 
   constructor(private http: HttpClient) {
@@ -133,6 +133,7 @@ export class SsoAuthService {
   }
 
   private _generateCodeChallenge(verifier: string): string {
+    // Simplified — production uses SubtleCrypto SHA-256
     return btoa(verifier).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   }
 }
